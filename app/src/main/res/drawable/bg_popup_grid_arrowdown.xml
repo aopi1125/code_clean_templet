@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <rotate
+            android:fromDegrees="225"
+            android:toDegrees="225"
+            android:pivotX="33%"
+            android:pivotY="13%">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/menu_popup_grid" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
