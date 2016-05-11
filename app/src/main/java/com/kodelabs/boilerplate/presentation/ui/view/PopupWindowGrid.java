@@ -1,4 +1,4 @@
-package com.kdweibo.android.dailog;
+package com.kodelabs.boilerplate.presentation.ui.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,12 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import com.kdweibo.android.config.KdweiboApplication;
-import com.kdweibo.android.ui.adapter.MyPagerAdapter;
-import com.kdweibo.android.util.AndroidUtils;
-import com.kdweibo.client.R;
-import com.kingdee.eas.eclite.ui.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
