@@ -53,8 +53,6 @@ public class PopupWindowGrid {
     private View mLayoutView;
     private FrameLayout mFlayoutUp;
     private FrameLayout mFlayoutDown;
-    private ArrayList<View> mListViews;
-    private MyPagerAdapter mMyPagerAdapter;
 
     private static float sTouchRawX;
     private static float sTouchRawY;
@@ -112,14 +110,13 @@ public class PopupWindowGrid {
         if (mFlayoutUp == null) {
             mFlayoutUp = (FrameLayout) mLayoutView.findViewById(R.id.ll_arrow_up);
         }
+        mFlayoutUp.removeAllViews();
         if (mFlayoutDown == null) {
             mFlayoutDown = (FrameLayout) mLayoutView.findViewById(R.id.ll_arrow_down);
         }
-        if (mListViews == null) {
-            mListViews = new ArrayList<View>();
-        } else {
-            mListViews.clear();
-        }
+        mFlayoutDown.removeAllViews();
+        List<View> listViews = new ArrayList<View>();
+        
 
         int size = popupList.size();
         int[] layoutPrms = initViewPager(mPager, size);
@@ -133,15 +130,11 @@ public class PopupWindowGrid {
             //every page for GridView
             GridView view = createGridView(pops, layoutPrms);
             view.setNumColumns(mColumnCount);
-            mListViews.add(view);
+            listViews.add(view);
         }
-        if (mMyPagerAdapter == null) {
-            mMyPagerAdapter = new MyPagerAdapter((Activity) mContext, mListViews);
-            mPager.setAdapter(mMyPagerAdapter);
-        } else {
-            mMyPagerAdapter.setData(mListViews);
-            mMyPagerAdapter.notifyDataSetChanged();
-        }
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter((Activity) mContext, listViews);
+        mPager.setAdapter(myPagerAdapter);
+       
         mPager.setCurrentItem(0);
         return layoutPrms;
     }
@@ -174,13 +167,11 @@ public class PopupWindowGrid {
         boolean isUp;
         if (sTouchRawY > PopupWindowHeight * 1.15f) {
             iv.setBackgroundResource(R.drawable.bg_popup_grid_arrowdown);
-            mFlayoutDown.removeAllViews();
             mFlayoutDown.addView(iv, layoutParams);
             mFlayoutDown.setVisibility(View.VISIBLE);
             isUp = false;
         } else {
             iv.setBackgroundResource(R.drawable.bg_popup_grid_arrowup);
-            mFlayoutUp.removeAllViews();
             mFlayoutUp.addView(iv, layoutParams);
             mFlayoutUp.setVisibility(View.VISIBLE);
             isUp = true;
