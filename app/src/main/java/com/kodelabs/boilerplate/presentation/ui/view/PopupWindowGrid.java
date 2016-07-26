@@ -19,6 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.event.PopUpWindowEvent;
+import com.android.ui.adapter.MyPagerAdapter;
+import com.android.util.AndroidUtils;
+import com.android.util.BusProvider;
+import com.client.R;
+import com.eas.eclite.ui.utils.LogUtil;
+import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,23 +35,29 @@ import java.util.List;
  */
 public class PopupWindowGrid {
 
-    private static final int itemViewWidth = AndroidUtils.Screen.dp2pix(59);//118
-    private static final int itemViewHeight = AndroidUtils.Screen.dp2pix(62);//116
-    private static final int itemDivideth = AndroidUtils.Screen.dp2pix(3);
-    private static final int arrowWidth = AndroidUtils.Screen.dp2pix(20);//20dp
-    private static final int windowCornersRadius = AndroidUtils.Screen.dp2pix(10);//10dp
-    private static final int space_gap_down_length = KdweiboApplication.getContext().getResources().getDimensionPixelSize(R.dimen.popup_grid_gap);
-    private static final int space_gap_up_length = KdweiboApplication.getContext().getResources().getDimensionPixelSize(R.dimen.popup_grid_gap_up);
+    private static final int ITEMVIEW_WIDTH = AndroidUtils.Screen.dp2pix(59);//118
+    private static final int ITEMVIEW_HEIGHT = AndroidUtils.Screen.dp2pix(62);//116
+    private static final int ITEM_DIVIDETH = AndroidUtils.Screen.dp2pix(3);
+    private static final int ARROW_WIDTH = AndroidUtils.Screen.dp2pix(20);//20dp
+    private static final int WINDOW_CORNERS_RADIUS = AndroidUtils.Screen.dp2pix(10);//10dp
 
-    private int screenWidth = AndroidUtils.Screen.getDisplay()[0];
-    private int screenHeight = AndroidUtils.Screen.getDisplay()[1];
-    private int columnCount = 5;
+    private int mScreenWidth = AndroidUtils.Screen.getDisplay()[0];
+    private int mScreenHeight = AndroidUtils.Screen.getDisplay()[1];
+    private int mColumnCount = 5;
+
+    private boolean bUnRegistered = true;
 
     private Context mContext;
-    private PopupWindow popupListWindow;
+    private PopupWindow mPopupListWindow;
+    private ViewPager mPager;
+    private View mLayoutView;
+    private FrameLayout mFlayoutUp;
+    private FrameLayout mFlayoutDown;
+    private ArrayList<View> mListViews;
+    private MyPagerAdapter mMyPagerAdapter;
 
-    private static float rawX;
-    private static float rawY;
+    private static float sTouchRawX;
+    private static float sTouchRawY;
 
     public PopupWindowGrid(Context context) {
         super();
@@ -57,6 +71,12 @@ public class PopupWindowGrid {
      * @param popupList 要显示的列表
      */
     public void showPopupWindow(View parent, List<ShareOtherDialog.ShareItem> popupList) {
+
+        if (bUnRegistered) {
+            BusProvider.getInstance().register(this);
+            bUnRegistered = false;
+        }
+
         //预防性Bug修复，详见http://blog.csdn.net/shangmingchao/article/details/50947418
         if (mContext instanceof Activity && ((Activity) mContext).isFinishing()) {
             return;
@@ -65,89 +85,104 @@ public class PopupWindowGrid {
             return;
         }
 
-        ViewGroup layoutView = (ViewGroup) LayoutInflater.from(mContext).inflate(
-                    R.layout.popup_grid, null);
+        int[] layoutPrms = initLayout(popupList);
 
+        //计算出弹出窗口的宽高
+        int popupWindowWidth = layoutPrms[0] + mLayoutView.getPaddingLeft() + mLayoutView.getPaddingRight();//左右留空隙不顶住edge
+        int popupWindowHeight = layoutPrms[1] + ARROW_WIDTH;
+        boolean isUp = initArrowView(popupWindowWidth, popupWindowHeight);//箭头在上为true在下为false
+        int disY = isUp ? (int) sTouchRawY : (int) sTouchRawY - popupWindowHeight;
+
+        mPopupListWindow = new PopupWindow(mLayoutView, popupWindowWidth, popupWindowHeight, true);
+        mPopupListWindow.setAnimationStyle(R.style.adminlocation_popupwindow_anim);
+        mPopupListWindow.setTouchable(true);
+        //设置背景以便在外面包裹一层可监听触屏等事件的容器
+        mPopupListWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopupListWindow.showAtLocation(parent, Gravity.NO_GRAVITY, (int) sTouchRawX - popupWindowWidth / 2, disY);
+    }
+
+    private int[] initLayout(List<ShareOtherDialog.ShareItem> popupList) {
+        if (mLayoutView == null) {
+            mLayoutView = LayoutInflater.from(mContext).inflate(R.layout.popup_grid, null);
+        }
         //ViewPager
-        ViewPager mPager = (ViewPager) layoutView.findViewById(R.id.viewpager_popup);
+        if (mPager == null) {
+            mPager = (ViewPager) mLayoutView.findViewById(R.id.viewpager_popup);
+        }
+        if (mFlayoutUp == null) {
+            mFlayoutUp = (FrameLayout) mLayoutView.findViewById(R.id.ll_arrow_up);
+        }
+        if (mFlayoutDown == null) {
+            mFlayoutDown = (FrameLayout) mLayoutView.findViewById(R.id.ll_arrow_down);
+        }
+        if (mListViews == null) {
+            mListViews = new ArrayList<View>();
+        } else {
+            mListViews.clear();
+        }
 
         int size = popupList.size();
         int[] layoutPrms = initViewPager(mPager, size);
-
-        ArrayList<View> listViews = new ArrayList<View>();
-        for (int i = 0; i < size; i = i + columnCount * 2) {
+        for (int i = 0; i < size; i = i + mColumnCount * 2) {
             List<ShareOtherDialog.ShareItem> pops = new ArrayList<>();
-            for (int j = 0; j < columnCount * 2; j++) {
+            for (int j = 0; j < mColumnCount * 2; j++) {
                 if (i + j < size) {
                     pops.add(popupList.get(i + j));
                 }
             }
             //every page for GridView
             GridView view = createGridView(pops, layoutPrms);
-            view.setNumColumns(columnCount);
-            listViews.add(view);
+            view.setNumColumns(mColumnCount);
+            mListViews.add(view);
         }
-        mPager.setAdapter(new MyPagerAdapter((Activity) mContext, listViews));
+        if (mMyPagerAdapter == null) {
+            mMyPagerAdapter = new MyPagerAdapter((Activity) mContext, mListViews);
+            mPager.setAdapter(mMyPagerAdapter);
+        } else {
+            mMyPagerAdapter.setData(mListViews);
+            mMyPagerAdapter.notifyDataSetChanged();
+        }
         mPager.setCurrentItem(0);
-
-        //计算出弹出窗口的宽高
-        int PopupWindowWidth = layoutPrms[0]+ layoutView.getPaddingLeft() + layoutView.getPaddingRight();//左右留空隙不顶住edge
-        int PopupWindowHeight = layoutPrms[1] + arrowWidth ;
-
-        boolean isUp = initArrowView(layoutView, PopupWindowWidth, PopupWindowHeight);//箭头在上为true在下为false
-
-        //实例化弹出窗口并显示
-        popupListWindow = new PopupWindow(layoutView, PopupWindowWidth,
-                PopupWindowHeight, true);
-        popupListWindow.setAnimationStyle(R.style.adminlocation_popupwindow_anim);
-        popupListWindow.setTouchable(true);
-        //设置背景以便在外面包裹一层可监听触屏等事件的容器
-        popupListWindow.setBackgroundDrawable(new BitmapDrawable());
-        LogUtil.i("PopupWindowGrid", "rawx_rawY =" + rawX + ";" + rawY + ";" + isUp + ";itemHeight=" + itemViewHeight);
-        int disY = isUp ? (int) rawY - screenHeight / 2 + PopupWindowHeight / 2 + space_gap_up_length : (int) rawY - screenHeight / 2 - PopupWindowHeight / 2 - space_gap_down_length * 2;
-        popupListWindow.showAtLocation(parent, Gravity.CENTER,
-                (int) rawX - screenWidth / 2, disY);
-        LogUtil.i("PopupWindowGrid", "showAtLocation " + (rawX - screenWidth / 2) + ";" + disY);
+        return layoutPrms;
     }
 
-
-    private boolean initArrowView(View layoutView, int PopupWindowWidth, int PopupWindowHeight) {
-        FrameLayout ll_up = (FrameLayout) layoutView.findViewById(R.id.ll_arrow_up);
-        FrameLayout ll_down = (FrameLayout) layoutView.findViewById(R.id.ll_arrow_down);
+    private boolean initArrowView(int PopupWindowWidth, int PopupWindowHeight) {
         //为水平列表添加指示箭头，默认在列表的左下角，根据手指按下位置绝对坐标进行位置调整
         ImageView iv = new ImageView(mContext);
-        float leftEdgeOffset = rawX;
-        float rightEdgeOffset = screenWidth - rawX;
+        float leftEdgeOffset = sTouchRawX;
+        float rightEdgeOffset = mScreenWidth - sTouchRawX;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (leftEdgeOffset < PopupWindowWidth / 2) {
-                if (leftEdgeOffset < arrowWidth / 2.0) {
-                    iv.setTranslationX(windowCornersRadius);
+                if (leftEdgeOffset < ARROW_WIDTH / 2.0) {
+                    iv.setTranslationX(WINDOW_CORNERS_RADIUS);
                 } else {
-                    iv.setTranslationX(leftEdgeOffset - arrowWidth / 2.0f);
+                    iv.setTranslationX(leftEdgeOffset - ARROW_WIDTH / 2.0f);
                 }
             } else if (rightEdgeOffset < PopupWindowWidth / 2) {
-                if (rightEdgeOffset < arrowWidth / 2.0f) {
-                    iv.setTranslationX(PopupWindowWidth - rightEdgeOffset - arrowWidth / 2.0f - windowCornersRadius);
+                if (rightEdgeOffset < ARROW_WIDTH / 2.0f) {
+                    iv.setTranslationX(PopupWindowWidth - rightEdgeOffset - ARROW_WIDTH / 2.0f - WINDOW_CORNERS_RADIUS);
                 } else {
-                    iv.setTranslationX(PopupWindowWidth - rightEdgeOffset - arrowWidth / 2.0f);
+                    iv.setTranslationX(PopupWindowWidth - rightEdgeOffset - ARROW_WIDTH / 2.0f);
                 }
             } else {
-                iv.setTranslationX(PopupWindowWidth / 2 - arrowWidth / 2.0f);
+                iv.setTranslationX(PopupWindowWidth / 2 - ARROW_WIDTH / 2.0f);
             }
         }
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(arrowWidth, arrowWidth);
-        boolean isUp = false;
-        if (rawY > PopupWindowHeight * 1.15f) {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ARROW_WIDTH, ARROW_WIDTH);
+        boolean isUp;
+        if (sTouchRawY > PopupWindowHeight * 1.15f) {
             iv.setBackgroundResource(R.drawable.bg_popup_grid_arrowdown);
-            ll_down.addView(iv, layoutParams);
-            ll_down.setVisibility(View.VISIBLE);
+            mFlayoutDown.removeAllViews();
+            mFlayoutDown.addView(iv, layoutParams);
+            mFlayoutDown.setVisibility(View.VISIBLE);
             isUp = false;
         } else {
             iv.setBackgroundResource(R.drawable.bg_popup_grid_arrowup);
-            ll_up.addView(iv, layoutParams);
-            ll_up.setVisibility(View.VISIBLE);
+            mFlayoutUp.removeAllViews();
+            mFlayoutUp.addView(iv, layoutParams);
+            mFlayoutUp.setVisibility(View.VISIBLE);
             isUp = true;
         }
         return isUp;
@@ -159,15 +194,15 @@ public class PopupWindowGrid {
         int width;
         int height;
         int padding = vp.getPaddingLeft();
-        if (size <= columnCount) {
-            columnCount = size;//显示多余空白
-            width = padding * 2 + itemViewWidth * size;
-            height = padding * 2 + itemViewHeight;
+        if (size <= mColumnCount) {
+            mColumnCount = size;//显示多余空白
+            width = padding * 2 + ITEMVIEW_WIDTH * size;
+            height = padding * 2 + ITEMVIEW_HEIGHT;
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
             vp.setLayoutParams(lp);
         } else {
-            width = padding * 2 + itemViewWidth * columnCount;
-            height = padding * 2 + itemViewHeight * 2 + itemDivideth;
+            width = padding * 2 + ITEMVIEW_WIDTH * mColumnCount;
+            height = padding * 2 + ITEMVIEW_HEIGHT * 2 + ITEM_DIVIDETH;
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
             vp.setLayoutParams(lp);
         }
@@ -177,7 +212,7 @@ public class PopupWindowGrid {
 
     private GridView createGridView(final List<ShareOtherDialog.ShareItem> popupList, int[] layoutPrms) {
         final GridView view = new GridView(mContext);
-        view.setHorizontalSpacing(itemDivideth);
+        view.setVerticalSpacing(ITEM_DIVIDETH);
         ShareOtherAdapter adapter = new ShareOtherAdapter(popupList);
         view.setAdapter(adapter);
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -194,7 +229,6 @@ public class PopupWindowGrid {
         return view;
     }
 
-
     /**
      * 隐藏气泡式弹出菜单PopupWindow
      */
@@ -204,28 +238,37 @@ public class PopupWindowGrid {
         if (mContext != null && mContext instanceof Activity && ((Activity) mContext).isFinishing()) {
             return;
         }
-        if (popupListWindow != null && popupListWindow.isShowing()) {
-            popupListWindow.dismiss();
+        if (mPopupListWindow != null && mPopupListWindow.isShowing()) {
+            mPopupListWindow.dismiss();
         }
     }
 
     public void reset() {
-        rawX = 0;
-        rawY = 0;
-        columnCount = 5;
+        sTouchRawX = 0;
+        sTouchRawY = 0;
+        mColumnCount = 5;
+        if (!bUnRegistered) {
+            BusProvider.getInstance().unregister(this);
+            bUnRegistered = true;
+        }
+    }
+
+    @Subscribe
+    public void onPopUpWindowStated(PopUpWindowEvent event) {
+        hiddenPopupWindow();
     }
 
     public void setOnDismissListener(PopupWindow.OnDismissListener listener) {
-        if(popupListWindow == null){
+        if (mPopupListWindow == null) {
             return;
         }
-        popupListWindow.setOnDismissListener(listener);
+        mPopupListWindow.setOnDismissListener(listener);
     }
 
     public static boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            rawX = event.getRawX();
-            rawY = event.getRawY();
+            sTouchRawX = event.getRawX();
+            sTouchRawY = event.getRawY();
         }
         return false;
     }
@@ -259,8 +302,8 @@ public class PopupWindowGrid {
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_chat_menu_long, null);
                 holder = new ViewHolder(convertView);
-                GridView.LayoutParams lp = new GridView.LayoutParams(itemViewWidth, itemViewHeight);
-                LogUtil.i("PopupWindowGrid", "getView width_height =" + itemViewWidth + ";" + itemViewHeight);
+                GridView.LayoutParams lp = new GridView.LayoutParams(ITEMVIEW_WIDTH, ITEMVIEW_HEIGHT);
+                LogUtil.i("PopupWindowGrid", "getView width_height =" + ITEMVIEW_WIDTH + ";" + ITEMVIEW_HEIGHT);
                 convertView.setLayoutParams(lp);
                 convertView.setTag(holder);
             } else {
