@@ -23,6 +23,14 @@ import com.client.R;
 import com.eas.eclite.ui.utils.LogUtil;
 import com.squareup.otto.Subscribe;
 
+import com.android.event.PopUpWindowEvent;
+import com.android.ui.adapter.MyPagerAdapter;
+import com.android.util.AndroidUtils;
+import com.android.util.BusProvider;
+import com.client.R;
+import com.eas.eclite.ui.utils.LogUtil;
+import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -208,8 +216,6 @@ public class PopupWindowGrid {
         p.y = height;
         return p;
     }
-
-
 
     /**
      * 隐藏气泡式弹出菜单PopupWindow
