@@ -2,34 +2,35 @@
 <resources>
     <string-array name="country_codes">
         <!--a-->
-        <item>阿富汗 93 A</item>
         <item>阿尔巴尼亚 355 A</item>
         <item>阿尔及利亚 213 A</item>
+        <item>阿富汗 93 A</item>
         <item>阿根廷 54 A</item>
         <item>阿拉伯联合酋长国 971 A</item>
         <item>阿曼 968 A</item>
         <item>阿瑟拜疆 994 A</item>
         <item>阿森松 247 A</item>
+        <item>埃及 20 A</item>
+        <item>埃塞俄比亚 251 A</item>
         <item>爱尔兰 353 A</item>
         <item>爱沙尼亚 372 A</item>
-        <item>埃塞俄比亚 251 A</item>
-        <item>埃及 20 A</item>
         <item>安道尔共和国 376 A</item>
         <item>安哥拉 244 A</item>
         <item>安圭拉岛 1264 A</item>
         <item>安提瓜和巴布达 1268 A</item>
-        <item>澳大利亚 61 A</item>
         <item>奥地利 43 A</item>
-        <item>澳门 853 A</item>
+        <item>澳大利亚 61 A</item>
+        <item>澳门（中国） 853 A</item>
 
         <!--b-->
-        <item>巴哈马 1242 B</item>
-        <item>巴林 973 B</item>
         <item>巴巴多斯 1246 B</item>
-        <item>巴基斯坦 92 B</item>
-        <item>巴拿马 507 B</item>
         <item>巴布亚新几内亚 675 B</item>
+        <item>巴哈马 1242 B</item>
+        <item>巴基斯坦 92 B</item>
         <item>巴拉圭 595 B</item>
+        <item>巴勒斯坦 970 B</item>
+        <item>巴林 973 B</item>
+        <item>巴拿马 507 B</item>
         <item>巴西 55 B</item>
         <item>白俄罗斯 375 B</item>
         <item>百慕大群岛 1441 B</item>
@@ -38,16 +39,18 @@
         <item>比利时 32 B</item>
         <item>秘鲁 51 B</item>
         <item>冰岛 354 B</item>
+        <item>波多黎各 1787 B</item>
+        <item>波黑 387 B</item>
+        <item>波兰 48 B</item>
         <item>玻利维亚 591 B</item>
         <item>伯利兹 501 B</item>
         <item>博茨瓦纳 267 B</item>
-        <item>波兰 48 B</item>
-        <item>波多黎各 1787 B</item>
         <item>布基纳法索 226 B</item>
         <item>布隆迪 257 B</item>
 
         <!--c-->
         <item>朝鲜 850 C</item>
+        <item>赤道几内亚 240 C</item>
 
         <!--d-->
         <item>丹麦 45 D</item>
@@ -55,26 +58,34 @@
         <item>东萨摩亚（美） 684 D</item>
         <item>多哥 228 D</item>
         <item>多米尼加共和国 1890 D</item>
+        <item>多米尼克 1767 D</item>
 
         <!--e-->
-        <item>厄瓜多尔 593 E</item>
         <item>俄罗斯 7 E</item>
+        <item>厄瓜多尔 593 E</item>
+        <item>厄立特里亚 291 E</item>
 
         <!--f-->
         <item>法国 33 F</item>
+        <item>法罗群岛 298 F</item>
         <item>法属圭亚那 594 F</item>
         <item>法属波利尼西亚 689 F</item>
-        <item>斐济 679 F</item>
+        <item>梵蒂冈 379 F</item>
         <item>菲律宾 63 F</item>
+        <item>斐济 679 F</item>
         <item>芬兰 358 F</item>
+        <item>佛得角 238 F</item>
 
         <!--g-->
-        <item>刚果 242 G</item>
         <item>冈比亚 220 G</item>
+        <item>刚果 242 G</item>
+        <item>刚果民主共和国 243 G</item>
         <item>哥伦比亚 57 G</item>
-        <item>格林纳达 1809 G</item>
-        <item>格鲁吉亚 995 G</item>
         <item>哥斯达黎加 506 G</item>
+        <item>格林纳达 1473 G</item>
+        <item>格林兰岛 299 G</item>
+        <item>格鲁吉亚 995 G</item>
+        <item>瓜德罗普 590 G</item>
         <item>古巴 53 G</item>
         <item>关岛 1671 G</item>
         <item>圭亚那 592 G</item>
@@ -89,11 +100,11 @@
 
         <!--j-->
         <item>吉布提 253 J</item>
+        <item>吉尔吉斯坦 996 J</item>
         <item>几内亚 224 J</item>
-        <item>吉尔吉斯坦 331 J</item>
         <item>加拿大 1 J</item>
-        <item>加蓬 241 J</item>
         <item>加纳 233 J</item>
+        <item>加蓬 241 J</item>
         <item>柬埔寨 855 J</item>
         <item>捷克 420 J</item>
         <item>津巴布韦 263 J</item>
@@ -102,15 +113,18 @@
         <item>喀麦隆 237 K</item>
         <item>卡塔尔 974 K</item>
         <item>开曼群岛 1345 K</item>
+        <item>科摩罗 269 K</item>
+        <item>科索沃 883 K</item>
         <item>科特迪瓦 225 K</item>
         <item>科威特 965 K</item>
+        <item>克罗地亚 385 K</item>
         <item>肯尼亚 254 K</item>
         <item>库克群岛 682 K</item>
 
         <!--l-->
         <item>拉脱维亚 371 L</item>
-        <item>老挝 856 L</item>
         <item>莱索托 266 L</item>
+        <item>老挝 856 L</item>
         <item>黎巴嫩 961 L</item>
         <item>利比里亚 231 L</item>
         <item>利比亚 218 L</item>
@@ -118,33 +132,43 @@
         <item>列支敦士登 423 L</item>
         <item>留尼旺 262 L</item>
         <item>卢森堡 352 L</item>
+        <item>卢旺达 250 L</item>
         <item>罗马尼亚 40 L</item>
 
         <!--m-->
         <item>马达加斯加 261 M</item>
+        <item>马尔代夫 960 M</item>
+        <item>马耳他 356 M</item>
         <item>马拉维 265 M</item>
         <item>马来西亚 60 M</item>
-        <item>马尔代夫 960 M</item>
-        <item>马里 233 M</item>
-        <item>马耳他 356 M</item>
+        <item>马里 223 M</item>
+        <item>马其顿 389 M</item>
+        <item>马绍尔群岛 692 M</item>
         <item>马里亚纳群岛 1670 M</item>
         <item>马提尼克 596 M</item>
+        <item>马约特 262 M</item>
         <item>毛里求斯 230 M</item>
-        <item>孟加拉国 880 M</item>
+        <item>毛里塔尼亚 222 M</item>
         <item>美国 1 M</item>
+        <item>美属萨摩亚 1684 M</item>
+        <item>美属维尔京群岛 1340 M</item>
         <item>蒙古 976 M</item>
+        <item>蒙塞拉特 1664 M</item>
+        <item>蒙特内格罗 382 M</item>
         <item>蒙特色拉特岛 1664 M</item>
+        <item>孟加拉国 880 M</item>
+        <item>密克罗尼西亚联邦 691 M</item>
         <item>缅甸 95 M</item>
+        <item>摩尔多瓦 373 M</item>
         <item>摩洛哥 212 M</item>
+        <item>摩纳哥 377 M</item>
         <item>莫桑比克 258 M</item>
         <item>墨西哥 52 M</item>
-        <item>摩尔多瓦 373 M</item>
-        <item>摩纳哥 377 M</item>
 
         <!--n-->
         <item>纳米比亚 264 N</item>
-        <item>瑙鲁 674 N</item>
         <item>南非 27 N</item>
+        <item>瑙鲁 674 N</item>
         <item>南斯拉夫 381 N</item>
         <item>尼加拉瓜 505 N</item>
         <item>尼泊尔 977 N</item>
@@ -153,7 +177,11 @@
         <item>挪威 47 N</item>
 
         <!--p-->
+        <item>帕劳 680 P</item>
         <item>葡萄牙 351 P</item>
+
+        <!--q-->
+        <item>千里达及托巴哥 1868 P</item>
 
         <!--r-->
         <item>日本 81 R</item>
@@ -162,15 +190,18 @@
 
         <!--s-->
         <item>萨尔瓦多 503 S</item>
-        <item>塞内加尔 221 S</item>
-        <item>塞舌尔 248 S</item>
+        <item>塞尔维亚 381 S</item>
         <item>塞拉利昂 232 S</item>
+        <item>塞内加尔 221 S</item>
         <item>塞浦路斯 357 S</item>
+        <item>塞舌尔 248 S</item>
         <item>沙特阿拉伯 966 S</item>
+        <item>圣诞岛 61 S</item>
         <item>圣马力诺 378 S</item>
         <item>圣多美和普林西比 239 S</item>
         <item>圣卢西亚 1758 S</item>
-        <item>圣文森特 1784 S</item>
+        <item>圣文森特和格林纳丁斯 1784 S</item>
+        <item>圣皮埃尔和密克隆群岛 508 S</item>
         <item>斯洛伐克 421 S</item>
         <item>斯洛文尼亚 386 S</item>
         <item>斯里兰卡 94 S</item>
@@ -182,14 +213,16 @@
 
         <!--t-->
         <item>塔吉克斯坦 992 T</item>
-        <item>台湾省 886 T</item>
+        <item>台湾（中国） 886 T</item>
         <item>泰国 66 T</item>
         <item>坦桑尼亚 255 T</item>
         <item>汤加 676 T</item>
+        <item>特克斯和凯科斯群岛 1649 T</item>
         <item>特立尼达和多巴哥 1809 T</item>
         <item>土耳其 90 T</item>
         <item>土库曼斯坦 993 T</item>
         <item>突尼斯 216 T</item>
+        <item>图瓦卢 688 T</item>
 
         <!--w-->
         <item>危地马拉 502 W</item>
@@ -198,13 +231,15 @@
         <item>乌干达 256 W</item>
         <item>乌克兰 380 W</item>
         <item>乌拉圭 598 W</item>
-        <item>乌兹别克斯坦 233 W</item>
+        <item>乌兹别克斯坦 998 W</item>
 
         <!--x-->
-        <item>希腊 30 X</item>
-        <item>西萨摩亚 685 X</item>
         <item>西班牙 34 X</item>
-        <item>香港 852 X</item>
+        <item>希腊 30 X</item>
+        <item>西撒哈拉 212 X</item>
+        <item>西萨摩亚 685 X</item>
+        <item>香港（中国） 852 X</item>
+        <item>新喀里多尼亚 687 X</item>
         <item>新加坡 65 X</item>
         <item>新西兰 64 X</item>
         <item>匈牙利 36 X</item>
@@ -221,6 +256,7 @@
         <item>印度 91 Y</item>
         <item>印度尼西亚 62 Y</item>
         <item>英国 44 Y</item>
+        <item>英属维尔京群岛 1284 Y</item>
         <item>越南 84 Y</item>
         <item>约旦 962 Y</item>
 
