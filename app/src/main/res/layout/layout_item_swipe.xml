@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.kdweibo.android.ui.view.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_swipe"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroud_2">
+
+    <include
+        android:id="@+id/view_content"
+        layout="@layout/fag_app_center_enterprise_item"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <include
+        android:id="@+id/view_menu"
+        layout="@layout/fag_app_info_extra"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" />
+
+</com.kdweibo.android.ui.view.SwipeLayout>
