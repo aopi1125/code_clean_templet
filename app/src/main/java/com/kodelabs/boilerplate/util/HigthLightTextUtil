@@ -1,4 +1,4 @@
-package com.kodelabs.boilerplate.util
+package com.kodelabs.boilerplate.util;
 
 
 public class HightLightTextUtil {
