@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.kdweibo.client.R;
+import com.client.R;
 
 import lombok.Getter;
 import lombok.Setter;
