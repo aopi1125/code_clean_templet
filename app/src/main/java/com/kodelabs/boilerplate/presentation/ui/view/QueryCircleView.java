@@ -23,7 +23,8 @@ public class QueryCircleView extends View {
     private ValueAnimator mAnimator2;
     private ValueAnimator mAnimator3;
     private ValueAnimator mAnimator4;
-    private int mDegree1;
+    private AnimatorSet mAnimatorSet;
+    private int mDegree1;//转动角度
     private int mDegree2;
     private int mDegree3;
     private int mDegree4;
@@ -60,7 +61,8 @@ public class QueryCircleView extends View {
 
     private void initView(Context context) {
         mPaint = new Paint();
-        mPaint.setAntiAlias(true);
+        mPaint.setAntiAlias(true);//抗锯齿
+        mPaint.setFilterBitmap(true);//抗锯齿
         mContext = context;
     }
 
@@ -79,7 +81,6 @@ public class QueryCircleView extends View {
                 }
             });
         }
-        mAnimator4.start();
         if (mAnimator3 == null) {
             mAnimator3 = ValueAnimator.ofInt(0, 360);
             mAnimator3.setDuration(3000);
@@ -94,7 +95,6 @@ public class QueryCircleView extends View {
                 }
             });
         }
-        mAnimator3.start();
         if (mAnimator2 == null) {
             mAnimator2 = ValueAnimator.ofInt(0, -360);
             mAnimator2.setDuration(3500);
@@ -109,7 +109,6 @@ public class QueryCircleView extends View {
                 }
             });
         }
-        mAnimator2.start();
         if (mAnimator1 == null) {
             mAnimator1 = ValueAnimator.ofInt(0, 360);
             mAnimator1.setDuration(4000);
@@ -124,7 +123,18 @@ public class QueryCircleView extends View {
                 }
             });
         }
-        mAnimator1.start();
+        mAnimatorSet = new AnimatorSet();
+        if(disappear){
+            ObjectAnimator disappearAnimator = ObjectAnimator.ofFloat(this, "alpha", 1,0);
+            disappearAnimator.setupStartValues();
+            disappearAnimator.setRepeatCount(count);
+            disappearAnimator.setInterpolator(new LinearInterpolator());
+            disappearAnimator.setDuration(4000);
+            mAnimatorSet.playTogether(mAnimator4, mAnimator3, mAnimator2, mAnimator1, disappearAnimator);
+        }else{
+            mAnimatorSet.playTogether(mAnimator4, mAnimator3, mAnimator2, mAnimator1);
+        }
+        mAnimatorSet.start();
     }
 
     public void stopAnimation() {
@@ -139,6 +149,9 @@ public class QueryCircleView extends View {
         }
         if (mAnimator4 != null) {
             mAnimator4.cancel();
+        }
+        if (mAnimatorSet != null) {
+            mAnimatorSet.cancel();
         }
     }
 
@@ -164,38 +177,80 @@ public class QueryCircleView extends View {
     }
 
     private void initBitmap(Context context) {
-        if(mWidth <= 0 || mHeight <= 0){
+        if (mWidth <= 0 || mHeight <= 0) {
             return;
         }
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.outWidth = mWidth;
-        opts.outHeight = mHeight;
+        float x = 1.0f, y = 1.0f;
+        int width = 0, height = 0;
+        Matrix matrix = null;
         if (mBitmap1 == null) {
-            mBitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_1, opts);
+            mBitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_1);
+            if (mBitmap1 != null) {
+                width = mBitmap1.getWidth();
+                height = mBitmap1.getHeight();
+                x = mWidth * 1.0f / width;
+                y = mHeight * 1.0f / height;
+                matrix = new Matrix();
+                matrix.postScale(x, y);
+                Bitmap dstbmp = Bitmap.createBitmap(mBitmap1, 0, 0, width, height,
+                        matrix, true);
+                mBitmap1.recycle();
+                mBitmap1 = dstbmp;
+            }
         }
         if (mBitmap2 == null) {
-            mBitmap2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_2, opts);
+            mBitmap2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_2);
+            if (mBitmap2 != null) {
+                if (matrix == null) {
+                    matrix = new Matrix();
+                    matrix.postScale(x, y);
+                }
+                Bitmap dstbmp = Bitmap.createBitmap(mBitmap2, 0, 0, width, height,
+                        matrix, true);
+                mBitmap2.recycle();
+                mBitmap2 = dstbmp;
+            }
         }
         if (mBitmap3 == null) {
-            mBitmap3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_3, opts);
+            mBitmap3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_3);
+            if (mBitmap3 != null) {
+                if (matrix == null) {
+                    matrix = new Matrix();
+                    matrix.postScale(x, y);
+                }
+                Bitmap dstbmp = Bitmap.createBitmap(mBitmap3, 0, 0, width, height,
+                        matrix, true);
+                mBitmap3.recycle();
+                mBitmap3 = dstbmp;
+            }
         }
         if (mBitmap4 == null) {
-            mBitmap4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_4, opts);
+            mBitmap4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade_query_4);
+            if (mBitmap4 != null) {
+                if (matrix == null) {
+                    matrix = new Matrix();
+                    matrix.postScale(x, y);
+                }
+                Bitmap dstbmp = Bitmap.createBitmap(mBitmap4, 0, 0, width, height,
+                        matrix, true);
+                mBitmap4.recycle();
+                mBitmap4 = dstbmp;
+            }
         }
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         stopAnimation();
-        if(mBitmap1 != null && !mBitmap1.isRecycled()){
+        if (mBitmap1 != null && !mBitmap1.isRecycled()) {
             mBitmap1.recycle();
         }
-        if(mBitmap2 != null && !mBitmap2.isRecycled()){
+        if (mBitmap2 != null && !mBitmap2.isRecycled()) {
             mBitmap2.recycle();
         }
-        if(mBitmap3 != null && !mBitmap3.isRecycled()){
+        if (mBitmap3 != null && !mBitmap3.isRecycled()) {
             mBitmap3.recycle();
         }
-        if(mBitmap4 != null && !mBitmap4.isRecycled()){
+        if (mBitmap4 != null && !mBitmap4.isRecycled()) {
             mBitmap4.recycle();
         }
     }
