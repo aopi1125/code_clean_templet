@@ -1,0 +1,2 @@
+﻿解析APK里解压出来的Androidmanifest.xm文件
+还原格式
