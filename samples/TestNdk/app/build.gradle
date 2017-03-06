@@ -22,6 +22,7 @@ model {
 
     android.ndk {
         moduleName "HarborLibrary"
+        ldLibs.addAll(['android', 'log'])
     }
 }
 

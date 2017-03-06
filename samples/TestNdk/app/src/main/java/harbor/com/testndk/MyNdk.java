@@ -11,4 +11,7 @@ public class MyNdk {
     }
 
     public native String getString();
+
+    public static native Object naMap();
+    public static native void naUnmap();
 }

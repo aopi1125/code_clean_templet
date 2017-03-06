@@ -1,6 +1,9 @@
 package harbor.com.testndk;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.widget.TextView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,16 +13,23 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.nio.ByteBuffer;
+
 public class MainActivity extends AppCompatActivity {
+
+    MyNdk myNdk;
+    TextView mTv;
+    private ByteBuffer mBf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        myNdk = new MyNdk();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -28,9 +38,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    // Example of a call to a native method
-    TextView tv = (TextView) findViewById(R.id.sample_text);
-    tv.setText(stringFromJNI());
+        // Example of a call to a native method
+        mTv = (TextView) findViewById(R.id.sample_text);
+        mTv.setText(stringFromJNI());
+
+        mBf = (ByteBuffer) myNdk.naMap();
+        byte[] buf = new byte[mBf.capacity()];
+        Log.i("buf capacity", mBf.capacity() + ";");
+        mBf.get(buf);
+        StringBuffer stringBuffer = new StringBuffer();
+        for(int j=0; j<buf.length; j++){
+            Log.i("", buf[j] + ":");
+            stringBuffer.append(String.valueOf(buf[j]));
+        }
+        mTv.append(stringBuffer.toString() + "\n");
+
+        startUpdateService();
+
+//        for(int i=0; i< 3; i++){
+//            mBf.rewind();
+//            mBf.get(buf);
+//            stringBuffer.setLength(0);
+//            for(int j=0; j<buf.length; j++){
+//                Log.i("", buf[j] +";");
+//                stringBuffer.append(String.valueOf(buf[j]));
+//            }
+//            mTv.append(stringBuffer.toString() + "\n");
+//            SystemClock.sleep(2000);
+//        }
+//        stopUpdateService();
+//        myNdk.naUnmap();
+    }
+
+    private void startUpdateService() {
+        Intent lIntent = new Intent(this, harbor.com.testndk.MemoryService.class);
+        lIntent.putExtra(MemoryService.EXTRA_START_STOP, 0);
+        startService(lIntent);
+    }
+
+    private void stopUpdateService() {
+        Intent lIntent = new Intent(this, harbor.com.testndk.MemoryService.class);
+        lIntent.putExtra(MemoryService.EXTRA_START_STOP, 1);
+        startService(lIntent);
     }
 
     @Override
@@ -60,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
      * which is packaged with this application.
      */
     public String stringFromJNI(){
-        return new MyNdk().getString();
+        return myNdk.getString();
     }
 
 }
