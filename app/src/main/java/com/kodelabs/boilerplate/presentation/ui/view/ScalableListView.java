@@ -441,10 +441,19 @@ public class ScalableListView extends ListView {
         if(mIsFling){
             return;
         }
-        if(Math.abs(distance) <=  THRESHOLD_DISTANCE){
-            return;
-        }
+		boolean forceRefresh = false;
         int firstPosition = getFirstVisiblePosition();
+        forceRefresh = getChildAt(firstPosition).getBottom() != mY80;
+        if(firstPosition <= 0){
+            forceRefresh &= getChildAt(firstPosition).getBottom() != mHeadLayoutParams.y;
+        }
+
+        if(Math.abs(distance) <=  THRESHOLD_DISTANCE){
+            if(!forceRefresh){
+                return;
+            }
+        }
+		
         LogUtil.d(TAG, "onTouchFinish firstPosition=" + firstPosition);
         if (mScrollUp) {
             if (firstPosition <= 0) {
