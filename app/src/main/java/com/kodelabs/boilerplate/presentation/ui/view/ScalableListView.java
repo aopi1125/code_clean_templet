@@ -473,4 +473,10 @@ public class ScalableListView extends ListView {
             smoothScrollToPositionFromTop(firstPosition, 0, DURATION_SHORT);
         }
     }
+	
+	@Override
+    protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+        return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, 0, isTouchEvent);
+    }
+}
 }
