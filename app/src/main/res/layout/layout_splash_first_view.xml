@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <!-- <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_flash_img1" />-->
+
+    <ImageView
+        android:id="@+id/iv_tokyo"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="45dp"
+        android:src="@drawable/ic_flash_location" />
+
+    <TextView
+        android:id="@+id/tv_tokyo"
+        style="@style/SplashFirstText"
+        android:layout_below="@+id/iv_tokyo"
+        android:layout_marginLeft="100dp"
+        android:gravity="center"
+        android:text="东京涩谷“世界最忙十字路口”"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_newyork"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="105dp"
+        android:src="@drawable/ic_flash_location" />
+
+    <TextView
+        android:id="@+id/tv_newyork"
+        style="@style/SplashFirstText"
+        android:layout_below="@+id/iv_newyork"
+        android:layout_marginLeft="25dp"
+        android:gravity="center"
+        android:text="纽约时代广场11屏联动"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_hongkong"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="21dp"
+        android:layout_marginTop="85dp"
+        android:src="@drawable/ic_flash_location" />
+
+    <TextView
+        android:id="@+id/tv_hongkong"
+        style="@style/SplashFirstText"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/iv_hongkong"
+        android:layout_gravity="right"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:text="香港铜锣湾巨型荧幕"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_china"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="220dp"
+        android:layout_marginTop="165dp"
+        android:src="@drawable/ic_flash_location" />
+
+    <TextView
+        android:id="@+id/tv_china"
+        style="@style/SplashFirstText"
+        android:layout_below="@+id/iv_china"
+        android:layout_marginLeft="120dp"
+        android:gravity="center"
+        android:text="全国31省会中心LED"
+        android:visibility="visible" />
+</RelativeLayout>
