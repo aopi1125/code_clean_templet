@@ -20,6 +20,8 @@ public class MediaExtractorUtil {
     private MediaExtractor mAudioExtractor;
     private int mAudioTrackIndex;
     private String mAudioPath;
+	private boolean bWithADTS = false;
+
 
     public MediaExtractorUtil(String audio){
         super();
@@ -44,6 +46,10 @@ public class MediaExtractorUtil {
                 }
             }
             mAudioExtractor.selectTrack(mAudioTrackIndex);
+			if(audioFormat.containsKey(MediaFormat.KEY_IS_ADTS)){
+                int is_adts = audioFormat.getInteger(MediaFormat.KEY_IS_ADTS);
+                bWithADTS = (is_adts == 1);
+            }
             int writeAudioTrackIndex = mediaMuxer.addTrack(audioFormat);
             return writeAudioTrackIndex;
         } catch (IOException e) {
@@ -98,9 +104,13 @@ public class MediaExtractorUtil {
                     mAudioExtractor.seekTo(0, MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
                     continue;
                 }
-                audioBufferInfo.size = readAudioSampleSize;
+                
+				audioBufferInfo.size = readAudioSampleSize - (bWithADTS ? 7 : 0);
+                if(audioBufferInfo.size < 0){
+                    audioBufferInfo.size = 0;
+                }
                 audioBufferInfo.presentationTimeUs += sampleTime;
-                audioBufferInfo.offset = 0;
+                audioBufferInfo.offset = (bWithADTS ? 7 : 0);
                 audioBufferInfo.flags = mAudioExtractor.getSampleFlags();
                 mediaMuxer.writeSampleData(writeAudioTrackIndex, byteBuffer, audioBufferInfo);
                 mAudioExtractor.advance();
